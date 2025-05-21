@@ -1,0 +1,51 @@
+package app
+
+import (
+	"fmt"
+	"goevents/config"
+	"goevents/internal/interfaces/http"
+	"goevents/internal/interfaces/http/controllers"
+	"goevents/pkg/httpserver"
+	"goevents/pkg/logger"
+	"goevents/pkg/mysql"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+)
+
+func Run(cfg *config.Config) {
+	log := logger.New(cfg.Log.Level)
+
+	// Initialize MYSQL
+	mysqlUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.MYSQL.Username, cfg.MYSQL.Password, cfg.MYSQL.Host, cfg.MYSQL.Port, cfg.MYSQL.Database)
+	mysql, err := mysql.New(mysqlUrl, mysql.SetMaxIdleConns(cfg.MYSQL.PoolMax), mysql.SetMaxOpenConns(cfg.MYSQL.PoolMax), mysql.SetConnMaxLifetime(time.Duration(cfg.MYSQL.PoolMax)*time.Second))
+	if err != nil {
+		log.Fatal(fmt.Errorf("internal/app - Run - mysql.New: %w", err))
+	}
+	defer mysql.Close()
+
+	httpserver := httpserver.New(httpserver.Port(cfg.HTTP.Port))
+	httpserver.Start()
+
+	http.NewRouter(httpserver.Router, http.RouterOption{
+		EventController: controllers.NewEventController(),
+	})
+
+	// Wait for interrupt signal to gracefully shutdown the server with
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	select {
+	case s := <-quit:
+		log.Info("internal/app - Run - signal: %s", s.String())
+	case err := <-httpserver.Notify():
+		log.Error(fmt.Errorf("internal/app - Run - httpServer.Notify: %w", err))
+	}
+
+	// Shutdown
+	err = httpserver.Shutdown()
+	if err != nil {
+		log.Error(fmt.Errorf("internal/app - Run - httpServer.Shutdown: %w", err))
+	}
+}
