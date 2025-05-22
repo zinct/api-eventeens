@@ -1,0 +1,63 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "GoEvents API",
+        "title": "GoEvents API",
+        "contact": {},
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/v1",
+    "paths": {
+        "/events": {
+            "get": {
+                "description": "Find all events",
+                "tags": [
+                    "event"
+                ],
+                "summary": "Find all events",
+                "responses": {}
+            },
+            "post": {
+                "description": "Create a new event",
+                "tags": [
+                    "event"
+                ],
+                "summary": "Create a new event",
+                "responses": {}
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "description": "Find an event",
+                "tags": [
+                    "event"
+                ],
+                "summary": "Find an event",
+                "responses": {}
+            },
+            "put": {
+                "description": "Update an event",
+                "tags": [
+                    "event"
+                ],
+                "summary": "Update an event",
+                "responses": {}
+            },
+            "delete": {
+                "description": "Delete an event",
+                "tags": [
+                    "event"
+                ],
+                "summary": "Delete an event",
+                "responses": {}
+            }
+        }
+    }
+}

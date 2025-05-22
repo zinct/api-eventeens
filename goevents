@@ -1,0 +1,13 @@
+#!/bin/sh
+
+case "$1" in
+  wire)
+    cd internal/wire && wire
+    ;;
+  swag)
+    cd internal/interface/delivery/http && swag init -g router.go -o ../../../../docs
+    ;;
+  *)
+    echo "Usage: $0 {serve|wire|swag}"
+    ;;
+esac

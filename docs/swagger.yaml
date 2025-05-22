@@ -1,0 +1,45 @@
+basePath: /v1
+host: localhost:8000
+info:
+  contact: {}
+  description: GoEvents API
+  license:
+    name: MIT
+  title: GoEvents API
+  version: "1.0"
+paths:
+  /events:
+    get:
+      description: Find all events
+      responses: {}
+      summary: Find all events
+      tags:
+      - event
+    post:
+      description: Create a new event
+      responses: {}
+      summary: Create a new event
+      tags:
+      - event
+  /events/{id}:
+    delete:
+      description: Delete an event
+      responses: {}
+      summary: Delete an event
+      tags:
+      - event
+    get:
+      description: Find an event
+      responses: {}
+      summary: Find an event
+      tags:
+      - event
+    put:
+      description: Update an event
+      responses: {}
+      summary: Update an event
+      tags:
+      - event
+schemes:
+- http
+swagger: "2.0"

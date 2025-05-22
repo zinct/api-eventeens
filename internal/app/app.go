@@ -21,7 +21,7 @@ func Run(cfg *config.Config) {
 	mysqlUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.MYSQL.Username, cfg.MYSQL.Password, cfg.MYSQL.Host, cfg.MYSQL.Port, cfg.MYSQL.Database)
 	mysql, err := mysql.New(mysqlUrl, mysql.SetMaxIdleConns(cfg.MYSQL.PoolMax), mysql.SetMaxOpenConns(cfg.MYSQL.PoolMax), mysql.SetConnMaxLifetime(time.Duration(cfg.MYSQL.PoolMax)*time.Second))
 	if err != nil {
-		log.Fatal(fmt.Errorf("internal/app - Run - mysql.New: %w", err))
+		panic(err)
 	}
 	defer mysql.Close()
 

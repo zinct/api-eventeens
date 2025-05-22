@@ -9,7 +9,7 @@ package wire
 import (
 	"database/sql"
 	"goevents/internal/infrastructure/repositories/event"
-	"goevents/internal/interface/delivery/http/controllers"
+	"goevents/internal/interface/delivery/http/v1/controllers"
 	"goevents/internal/usecases"
 )
 
