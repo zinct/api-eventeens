@@ -1,7 +1,7 @@
 package http
 
 import (
-	"goevents/internal/interfaces/http/controllers"
+	"goevents/internal/interface/delivery/http/controllers"
 
 	"github.com/gin-gonic/gin"
 )

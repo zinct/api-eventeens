@@ -8,7 +8,7 @@ import (
 )
 
 type MySQL struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func New(url string, opts ...Options) (*MySQL, error) {
@@ -20,9 +20,9 @@ func New(url string, opts ...Options) (*MySQL, error) {
 	for _, opt := range opts {
 		opt(db)
 	}
-	return &MySQL{db: db}, nil
+	return &MySQL{DB: db}, nil
 }
 
 func (m *MySQL) Close() error {
-	return m.db.Close()
+	return m.DB.Close()
 }

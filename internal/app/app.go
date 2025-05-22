@@ -3,8 +3,8 @@ package app
 import (
 	"fmt"
 	"goevents/config"
-	"goevents/internal/interfaces/http"
-	"goevents/internal/interfaces/http/controllers"
+	"goevents/internal/interface/delivery/http"
+	"goevents/internal/wire"
 	"goevents/pkg/httpserver"
 	"goevents/pkg/logger"
 	"goevents/pkg/mysql"
@@ -29,7 +29,7 @@ func Run(cfg *config.Config) {
 	httpserver.Start()
 
 	http.NewRouter(httpserver.Router, http.RouterOption{
-		EventController: controllers.NewEventController(),
+		EventController: wire.InitializeEventController(mysql.DB),
 	})
 
 	// Wait for interrupt signal to gracefully shutdown the server with

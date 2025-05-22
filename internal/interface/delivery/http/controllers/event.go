@@ -1,16 +1,18 @@
 package controllers
 
 import (
+	"goevents/internal/domain/usecases"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func NewEventController() *EventController {
-	return &EventController{}
+type EventController struct {
+	uc usecases.EventUsecase
 }
 
-type EventController struct {
+func NewEventController(usecase usecases.EventUsecase) *EventController {
+	return &EventController{uc: usecase}
 }
 
 func (c *EventController) Create(ctx *gin.Context) {
