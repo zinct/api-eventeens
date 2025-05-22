@@ -28,7 +28,7 @@ func (c *EventController) Create(ctx *gin.Context) {
 // @Tags event
 // @Router /events [get]
 func (c *EventController) FindAll(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "Event found"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Event fosssnd"})
 }
 
 // @Summary Find an event

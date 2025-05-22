@@ -1,27 +1,32 @@
-version: '3.8'
+version: "3.8"
 services:
   app:
     build:
-      context: .
+      context: ./api
       dockerfile: Dockerfile
     container_name: go_app
     env_file:
-      - .env
+      - ./api/.env
     ports:
       - "8080:8080"
     networks:
       - app-network
     depends_on:
       - db
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./api
+          target: /app
 
   db:
     image: mysql:8.0
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: namadb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: goevents
+      MYSQL_USER: goevents
+      MYSQL_PASSWORD: goevents
     ports:
       - "3306:3306"
     networks:
@@ -29,4 +34,4 @@ services:
 
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge
