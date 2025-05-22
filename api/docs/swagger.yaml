@@ -1,5 +1,19 @@
 basePath: /v1
-host: localhost:8000
+definitions:
+  requests.CreateEventRequest:
+    properties:
+      date:
+        type: string
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - date
+    - description
+    - title
+    type: object
+host: localhost:8080
 info:
   contact: {}
   description: GoEvents API
@@ -16,7 +30,18 @@ paths:
       tags:
       - event
     post:
+      consumes:
+      - application/json
       description: Create a new event
+      parameters:
+      - description: Event
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateEventRequest'
+      produces:
+      - application/json
       responses: {}
       summary: Create a new event
       tags:

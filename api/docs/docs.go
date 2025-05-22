@@ -29,10 +29,27 @@ const docTemplate = `{
             },
             "post": {
                 "description": "Create a new event",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "event"
                 ],
                 "summary": "Create a new event",
+                "parameters": [
+                    {
+                        "description": "Event",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateEventRequest"
+                        }
+                    }
+                ],
                 "responses": {}
             }
         },
@@ -62,13 +79,34 @@ const docTemplate = `{
                 "responses": {}
             }
         }
+    },
+    "definitions": {
+        "requests.CreateEventRequest": {
+            "type": "object",
+            "required": [
+                "date",
+                "description",
+                "title"
+            ],
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8000",
+	Host:             "localhost:8080",
 	BasePath:         "/v1",
 	Schemes:          []string{"http"},
 	Title:            "GoEvents API",

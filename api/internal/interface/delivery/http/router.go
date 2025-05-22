@@ -17,7 +17,7 @@ type RouterOption struct {
 // @title       GoEvents API
 // @description GoEvents API
 // @version     1.0
-// @host        localhost:8000
+// @host        localhost:8080
 // @BasePath    /v1
 // @schemes     http
 // @license.name MIT

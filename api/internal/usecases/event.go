@@ -16,21 +16,21 @@ func NewEventUsecase(repo repositories.EventRepository) usecases.EventUsecase {
 }
 
 func (u *EventUsecase) Create(ctx context.Context, event *entities.Event) error {
-	panic("not implemented")
+	return u.repo.Create(ctx, event)
 }
 
 func (u *EventUsecase) FindAll(ctx context.Context) ([]*entities.Event, error) {
-	panic("not implemented")
+	return u.repo.FindAll(ctx)
 }
 
 func (u *EventUsecase) Find(ctx context.Context, id string) (*entities.Event, error) {
-	panic("not implemented")
+	return u.repo.Find(ctx, id)
 }
 
 func (u *EventUsecase) Update(ctx context.Context, event *entities.Event) error {
-	panic("not implemented")
+	return u.repo.Update(ctx, event)
 }
 
 func (u *EventUsecase) Delete(ctx context.Context, id string) error {
-	panic("not implemented")
+	return u.repo.Delete(ctx, id)
 }

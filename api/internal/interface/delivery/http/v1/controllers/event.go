@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"goevents/internal/domain/entities"
 	"goevents/internal/domain/usecases"
+	"goevents/internal/interface/delivery/http/v1/requests"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,9 +20,46 @@ func NewEventController(usecase usecases.EventUsecase) *EventController {
 // @Summary Create a new event
 // @Description Create a new event
 // @Tags event
+// @Accept json
+// @Produce json
+// @Param event body requests.CreateEventRequest true "Event"
 // @Router /events [post]
 func (c *EventController) Create(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "Event created"})
+	var req requests.CreateEventRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Failed to create event",
+			"success": false,
+			"code":    http.StatusBadRequest,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	event := &entities.Event{
+		Title:       req.Title,
+		Description: req.Description,
+		Date:        req.Date,
+	}
+
+	err := c.uc.Create(ctx, event)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to create event",
+			"success": false,
+			"code":    http.StatusInternalServerError,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Event created",
+		"success": true,
+		"code":    http.StatusOK,
+		"data":    event,
+	})
 }
 
 // @Summary Find all events
