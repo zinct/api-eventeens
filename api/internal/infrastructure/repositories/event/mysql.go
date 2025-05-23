@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"goevents/internal/domain/entities"
 	"goevents/internal/domain/repositories"
+	"time"
 )
 
 type EventRepositoryMySQL struct {
@@ -33,15 +34,25 @@ func (r *EventRepositoryMySQL) FindAll(ctx context.Context) ([]*entities.Event, 
 	}
 	defer rows.Close()
 
-	events := []*entities.Event{}
+	events := make([]*entities.Event, 0)
 	for rows.Next() {
 		var event entities.Event
-		err := rows.Scan(&event.ID, &event.Title, &event.Description, &event.Date)
+		var strTime string
+		err := rows.Scan(&event.ID, &event.Title, &event.Description, &strTime)
 		if err != nil {
 			return nil, fmt.Errorf("internal/infrastructure/repositories/event/mysql - FindAll - rows.Scan: %w", err)
 		}
+
+		// convert strTime to time.Time
+		parsedTime, err := time.Parse("2006-01-02 15:04:05", strTime)
+		if err != nil {
+			return nil, fmt.Errorf("internal/infrastructure/repositories/event/mysql - FindAll - time.Parse: %w", err)
+		}
+		event.Date = parsedTime
+
 		events = append(events, &event)
 	}
+
 	return events, nil
 }
 

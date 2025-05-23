@@ -67,7 +67,23 @@ func (c *EventController) Create(ctx *gin.Context) {
 // @Tags event
 // @Router /events [get]
 func (c *EventController) FindAll(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "Event fosssnd"})
+	events, err := c.uc.FindAll(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Internal server error",
+			"success": false,
+			"code":    http.StatusInternalServerError,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Fetch events success",
+		"success": true,
+		"code":    http.StatusOK,
+		"data":    events,
+	})
 }
 
 // @Summary Find an event
