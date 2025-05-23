@@ -3,6 +3,15 @@ MYSQL_URL=mysql://$(MYSQL_USERNAME):$(MYSQL_PASSWORD)@tcp($(MYSQL_HOST):$(MYSQL_
 run:
 	go run cmd/app/main.go
 
+mock:
+	mockery
+
+test:
+	go test ./... -cover | grep -v "no test files"
+
+test-verbose:
+	go test ./... -v -cover | grep -v "no test files"
+
 migrate-create:
 	@read -p "Migration name: " name; \
 	migrate create -ext sql -dir infrastructure/db/migrations -seq $$name

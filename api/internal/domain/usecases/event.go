@@ -1,3 +1,5 @@
+//go:generate mockery --name=EventUsecase --inpackage --filename=event_usecase_mock.go
+
 package usecases
 
 import (

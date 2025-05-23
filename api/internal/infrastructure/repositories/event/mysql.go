@@ -44,9 +44,12 @@ func (r *EventRepositoryMySQL) FindAll(ctx context.Context) ([]*entities.Event, 
 		}
 
 		// convert strTime to time.Time
-		parsedTime, err := time.Parse("2006-01-02 15:04:05", strTime)
+		parsedTime, err := time.ParseInLocation("2006-01-02T15:04:05Z07:00", strTime, time.Local)
 		if err != nil {
-			return nil, fmt.Errorf("internal/infrastructure/repositories/event/mysql - FindAll - time.Parse: %w", err)
+			parsedTime, err = time.ParseInLocation("2006-01-02 15:04:05", strTime, time.Local)
+			if err != nil {
+				return nil, fmt.Errorf("internal/infrastructure/repositories/event/mysql - FindAll - time.ParseInLocation: %w", err)
+			}
 		}
 		event.Date = parsedTime
 

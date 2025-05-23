@@ -1,3 +1,5 @@
+//go:generate mockery --name=EventRepository --inpackage --filename=event_repository_mock.go
+
 package repositories
 
 import (

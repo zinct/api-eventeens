@@ -91,7 +91,23 @@ func (c *EventController) FindAll(ctx *gin.Context) {
 // @Tags event
 // @Router /events/{id} [get]
 func (c *EventController) Find(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "Event found"})
+	id := ctx.Param("id")
+	event, err := c.uc.Find(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to find event",
+			"success": false,
+			"code":    http.StatusInternalServerError,
+			"error":   err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Event found",
+		"success": true,
+		"code":    http.StatusOK,
+		"data":    event,
+	})
 }
 
 // @Summary Update an event
@@ -99,7 +115,39 @@ func (c *EventController) Find(ctx *gin.Context) {
 // @Tags event
 // @Router /events/{id} [put]
 func (c *EventController) Update(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "Event updated"})
+	id := ctx.Param("id")
+	var req requests.UpdateEventRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Failed to update event",
+			"success": false,
+			"code":    http.StatusBadRequest,
+			"error":   err.Error(),
+		})
+		return
+	}
+	event := &entities.Event{
+		ID:          id,
+		Title:       req.Title,
+		Description: req.Description,
+		Date:        req.Date,
+	}
+	err := c.uc.Update(ctx, event)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to update event",
+			"success": false,
+			"code":    http.StatusInternalServerError,
+			"error":   err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Event updated",
+		"success": true,
+		"code":    http.StatusOK,
+		"data":    event,
+	})
 }
 
 // @Summary Delete an event
@@ -107,5 +155,20 @@ func (c *EventController) Update(ctx *gin.Context) {
 // @Tags event
 // @Router /events/{id} [delete]
 func (c *EventController) Delete(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{"message": "Event deleted"})
+	id := ctx.Param("id")
+	err := c.uc.Delete(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to delete event",
+			"success": false,
+			"code":    http.StatusInternalServerError,
+			"error":   err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "Event deleted",
+		"success": true,
+		"code":    http.StatusOK,
+	})
 }
