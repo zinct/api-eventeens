@@ -2,11 +2,11 @@ version: "3.8"
 services:
   app:
     build:
-      context: ./api
+      context: .
       dockerfile: Dockerfile
     container_name: go_app
     env_file:
-      - ./api/.env
+      - .env
     ports:
       - "8080:8080"
     networks:
@@ -16,7 +16,7 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ./api
+          path: .
           target: /app
 
   db:
