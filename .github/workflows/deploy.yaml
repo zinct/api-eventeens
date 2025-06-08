@@ -37,6 +37,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,7 +49,7 @@ jobs:
     env:
       ARGOCD_SERVER: argocd.motionlaboratory.com
       ARGOCD_APP_NAME: api-eventeens
-    needs: [build]
+    needs: [build, test]
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
