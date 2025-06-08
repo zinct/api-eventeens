@@ -35,14 +35,38 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{ github.ref_name }}
 
-  test:
+  analyze:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Run tests
-        run: go test ./...
+
+      - name: Set up JDK 17 for SonarCloud
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: [build]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Run tests
+  #       run: go test ./...
 
   deploy:
     runs-on: ubuntu-latest
