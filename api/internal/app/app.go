@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"goevents/config"
 	"goevents/internal/interface/delivery/http"
+	"goevents/internal/interface/delivery/http/v1/controllers"
 	"goevents/internal/wire"
 	"goevents/pkg/httpserver"
 	"goevents/pkg/logger"
@@ -28,8 +29,15 @@ func Run(cfg *config.Config) {
 	httpserver := httpserver.New(httpserver.Port(cfg.HTTP.Port))
 	httpserver.Start()
 
+	dbPingFunc := func() error {
+		return mysql.DB.Ping()
+	}
+
+	healthCheck := controllers.NewHealthController(dbPingFunc)
+
 	http.NewRouter(httpserver.Router, http.RouterOption{
-		EventController: wire.InitializeEventController(mysql.DB),
+		EventController:  wire.InitializeEventController(mysql.DB),
+		HealthController: healthCheck,
 	})
 
 	// Wait for interrupt signal to gracefully shutdown the server with

@@ -11,7 +11,8 @@ import (
 )
 
 type RouterOption struct {
-	EventController *controllers.EventController
+	EventController  *controllers.EventController
+	HealthController *controllers.HealthController
 }
 
 // @title       GoEvents API
@@ -22,6 +23,10 @@ type RouterOption struct {
 // @schemes     http
 // @license.name MIT
 func NewRouter(router *gin.Engine, opts RouterOption) *gin.Engine {
+	// Health check endpoints
+	router.GET("/health/liveness", opts.HealthController.Liveness)
+	router.GET("/health/readiness", opts.HealthController.Readiness)
+
 	{
 		v1 := router.Group("/v1")
 
