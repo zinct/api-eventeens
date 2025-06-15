@@ -9,6 +9,8 @@ on:
   pull_request:
     branches:
       - main
+    tags:
+      - v*
 
 jobs:
   build:
@@ -86,6 +88,7 @@ jobs:
       ARGOCD_SERVER: argocd.motionlaboratory.com
       ARGOCD_APP_NAME: api-eventeens
     needs: [build, analyze, test]
+    if: github.ref_type == 'tag'
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
