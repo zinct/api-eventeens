@@ -65,21 +65,27 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: [build]
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Run tests
-  #       run: go test ./...
+  test:
+    runs-on: ubuntu-latest
+    needs: build # Runs after the build job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21" # Specify your Go version
+
+      - name: Run unit tests
+        run: go test -v ./... # The -v flag provides verbose output
 
   deploy:
     runs-on: ubuntu-latest
     env:
       ARGOCD_SERVER: argocd.motionlaboratory.com
       ARGOCD_APP_NAME: api-eventeens
-    needs: build
+    needs: [build, analyze]
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
