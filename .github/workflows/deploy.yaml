@@ -85,7 +85,7 @@ jobs:
     env:
       ARGOCD_SERVER: argocd.motionlaboratory.com
       ARGOCD_APP_NAME: api-eventeens
-    needs: [build, analyze]
+    needs: [build, analyze, test]
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
